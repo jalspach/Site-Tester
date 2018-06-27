@@ -104,7 +104,7 @@ do
 			;;
 	esac
 done
-LOG_LOCATION=/home/pi/EESD-Test_Results/${SITE_NAME}/
+LOG_LOCATION=$HOME/EESD-Test_Results/${SITE_NAME}/
 echo ""
 echo ""
 echo "Creating folder to store results"
