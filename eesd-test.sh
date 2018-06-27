@@ -29,6 +29,7 @@ echo ""
 echo ""
 read -p "Enter site code you are running the test from: " USER_SITE_CODE
 echo ""
+echo "use MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE"
 while :
 do
 	case $USER_SITE_CODE in
@@ -50,7 +51,7 @@ do
 			SITE_NAME="ShastaMeadows"
 			break
 			;;
-		ps|PA)
+		pa|PA)
 			echo "Logging tests from Parsons"
 			SITE_CODE="PA"
 			SITE_NAME="Parsons"
