@@ -27,7 +27,7 @@ do
 done
 echo ""
 echo ""
-read -p "Enter the site code you are running the test from. Choose from MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE" USER_SITE_CODE
+read -p "Enter the site code you are running the test from. Choose from MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE " USER_SITE_CODE
 echo ""
 while :
 do
@@ -61,7 +61,7 @@ do
 			SITE_CODE="RO"
 			SITE_NAME="Rother"
 			break
-			;
+			;;
 		am|AM)
 			echo "Logging tests from Alta Mesa"
 			SITE_CODE="AM"
