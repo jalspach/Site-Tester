@@ -4,7 +4,7 @@ clear
 echo "This test script will run prescribed tests from this box to various places on the network. It will capture the log files for later use."
 
 echo ""
-read -p "Is this a pretest? ( Y / N ) " USER_PRETEST
+read -p "Is this a pretest? ( Y/N ) " USER_PRETEST
 echo ""
 while :
 do
@@ -27,7 +27,7 @@ do
 done
 echo ""
 echo ""
-read -p "Enter the site code you are running the test from. Choose from MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE " USER_SITE_CODE
+read -p "Enter the site code you are running the test from. Choose from MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE: " USER_SITE_CODE
 echo ""
 while :
 do
@@ -115,7 +115,7 @@ echo ""
 echo "Test suite should take a min or so to complete"
 echo ""
 echo ""
-NOW=$(date +"%F_%T")
+NOW=$(date +%F_%H%M%S)
 echo "Starting 11 tests at ...$(date)"
 echo ""
 echo "Test 1 (Iperf to SCOE) in progress"
@@ -128,6 +128,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -142,6 +143,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -155,6 +157,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -169,6 +172,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -182,6 +186,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -195,6 +200,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -208,6 +214,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -221,6 +228,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo ""
@@ -234,6 +242,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo "Test 10 (NUTTCP to SCOE) in progress"
@@ -246,6 +255,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 # copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
@@ -259,6 +269,7 @@ do
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
 	fi
 done
 echo "Testing complete at ...$(date)"
