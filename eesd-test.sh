@@ -115,7 +115,7 @@ echo ""
 echo "Test suite should take a min or so to complete"
 echo ""
 echo ""
-NOW=$(date +%F_%H%M%S)
+NOW=$(date +%F_%H-%M-%S)
 echo "Starting 11 tests at ...$(date)"
 echo ""
 echo "Test 1 (Iperf to SCOE) in progress"
