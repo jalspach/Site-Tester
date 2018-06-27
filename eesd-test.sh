@@ -27,9 +27,8 @@ do
 done
 echo ""
 echo ""
-read -p "Enter site code you are running the test from: " USER_SITE_CODE
+read -p "Enter the site code you are running the test from. Choose from MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE" USER_SITE_CODE
 echo ""
-echo "use MI, SM, PA, RO, AM, LV, BC, MV, TR or SCOE"
 while :
 do
 	case $USER_SITE_CODE in
@@ -62,7 +61,7 @@ do
 			SITE_CODE="RO"
 			SITE_NAME="Rother"
 			break
-			;;
+			;
 		am|AM)
 			echo "Logging tests from Alta Mesa"
 			SITE_CODE="AM"
@@ -125,7 +124,7 @@ do
 	/usr/bin/iperf3 -c iperf.shastacoe.net -V -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-SCOE.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -139,7 +138,7 @@ do
 /usr/bin/iperf3 -c iperf.shastacoe.net -V -u -b 10M -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-SCOE_UDP.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -152,7 +151,7 @@ do
 /usr/bin/iperf3 -c iperf.he.net -V -Z -T${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-HE.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test  as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -166,7 +165,7 @@ do
 /usr/bin/iperf3 -c iperf.he.net -V -u -b 10M -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-HE_UDP.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -179,7 +178,7 @@ do
 /usr/bin/iperf3 -c iperf.shastacoe.net -V -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-SCOE.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -192,7 +191,7 @@ do
 /usr/bin/iperf3 -c iperf.shastacoe.net -V -u -b 10M -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-SCOE_UDP.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -205,7 +204,7 @@ do
 /usr/bin/iperf3 -c iperf.he.net -V -Z -R --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-HE.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -218,7 +217,7 @@ do
 /usr/bin/iperf3 -c iperf.he.net -V -u -b 10M -Z -R --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-HE_UDP.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -231,7 +230,7 @@ do
 /usr/bin/speedtest --server 5411 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_Speedtest-2-5411.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -243,7 +242,7 @@ do
 /usr/bin/nuttcp -xt iperf.shastacoe.net > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_nuttcp-2-SCOE.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
@@ -256,7 +255,7 @@ do
 /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
 	if [ $? -eq 0 ]
 	then
-		echo "Test compleated as expected"
+		echo "Test completed as expected"
 		break
 	else
 		echo "Test did NOT complete as expected. Making $i more attempts"
