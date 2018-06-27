@@ -6,3 +6,11 @@ This script requires the following packages be installed manually, as of the cur
 iperf3
 speedtest-cli
 nuttcp
+netcat
+
+~~~
+Potential Improvements
+lots lol but some specifics:
+- Copy results to a web server or other remote, accessible storage location
+- List targets to iterate over
+- rewrite tests as functions that get called against the list of targets

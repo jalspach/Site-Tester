@@ -116,7 +116,7 @@ echo "Test suite should take a min or so to complete"
 echo ""
 echo ""
 NOW=$(date +"%F_%T")
-echo "Starting 9 tests at ...$(date)"
+echo "Starting 11 tests at ...$(date)"
 echo ""
 echo "Test 1 (Iperf to SCOE) in progress"
 for i in 5 4 3 2 1
@@ -248,5 +248,22 @@ do
 		echo "Test did NOT complete as expected. Making $i more attempts"
 	fi
 done
+# copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
+echo "Test 11 (NETCAT to system1) in progress"
+for i in 5 4 3 2 1
+do
+/bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test compleated as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+	fi
+done
 echo "Testing complete at ...$(date)"
+echo ""
+# echo "Copy files to accessable storage"
+# svn ${LOG_LOCATION}/* ${REMOTE_LOCATION}/${SITE_NAME}/
+# echo "finished copying files to remote accessable storage"
 exit 0
