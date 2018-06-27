@@ -245,6 +245,7 @@ do
 		sleep 4
 	fi
 done
+echo ""
 echo "Test 10 (NUTTCP to SCOE) in progress"
 for i in 5 4 3 2 1
 do
@@ -258,6 +259,7 @@ do
 		sleep 4
 	fi
 done
+echo ""
 # copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
 echo "Test 11 (NETCAT to system1) in progress"
 for i in 5 4 3 2 1
