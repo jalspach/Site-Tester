@@ -259,12 +259,27 @@ do
 		sleep 4
 	fi
 done
-echo ""
+# echo ""
 # copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
-echo "Test 11 (NETCAT to system1) in progress"
+# echo "Test 11 (NETCAT to system1) in progress"
+# for i in 5 4 3 2 1
+# do
+# /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
+# 	if [ $? -eq 0 ]
+# 	then
+# 		echo "Test completed as expected"
+# 		break
+# 	else
+# 		echo "Test did NOT complete as expected. Making $i more attempts"
+# 		sleep 4
+# 	fi
+# done
+echo ""
+copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
+echo "Test 11 (nmap to system1) in progress"
 for i in 5 4 3 2 1
 do
-/bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
+/usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}${PRETEST}${SITE_NAME}_nmap-2-SCOE80.${NOW}.log
 	if [ $? -eq 0 ]
 	then
 		echo "Test completed as expected"
@@ -274,6 +289,7 @@ do
 		sleep 4
 	fi
 done
+echo ""
 echo "Testing complete at ...$(date)"
 echo ""
 # echo "Copy files to accessable storage"

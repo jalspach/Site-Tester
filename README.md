@@ -6,7 +6,8 @@ This script requires the following packages be installed manually, as of the cur
  - iperf3
  - speedtest-cli
  - nuttcp
- - netcat
+ - netcat < commented out for now since it requires root permissions
+ - nmap
 
 ~~~
 Potential Improvements
