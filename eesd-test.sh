@@ -116,7 +116,7 @@ echo "Test suite should take a min or so to complete"
 echo ""
 echo ""
 NOW=$(date +%F_%H-%M-%S)
-echo "Starting 11 tests at ...$(date)"
+echo "Starting 21 tests at ...$(date)"
 echo ""
 echo "Test 1 (Iperf to SCOE) in progress"
 for i in 5 4 3 2 1
@@ -280,6 +280,148 @@ echo "Test 11 (nmap to system1) in progress"
 for i in 5 4 3 2 1
 do
 /usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}${PRETEST}${SITE_NAME}_nmap-2-SCOE80.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 12 (Iperf to Alta Mesa) in progress"
+for i in 5 4 3 2 1
+do
+	/usr/bin/iperf3 -c 10.96.254.27 -V -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-AM.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 13 (Iperf to Alta Mesa UDP) in progress"
+ATTEMPT=5
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.27 -V -u -b 10M -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-AM_UDP.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 14 (Iperf to Alta Mesa Reverse) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.27 -V -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-AM.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 15 (Iperf to Alta Mesa UDP Reverse) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.27 -V -u -b 10M -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-AM_UDP.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 16 (NUTTCP to Alta Mesa) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/nuttcp -xt 10.96.254.27 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_nuttcp-2-AM.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 17 (Iperf to Monte Vista) in progress"
+for i in 5 4 3 2 1
+do
+	/usr/bin/iperf3 -c 10.96.254.26 -V -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-MV.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 18 (Iperf to Monte Vista UDP) in progress"
+ATTEMPT=5
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.26 -V -u -b 10M -Z -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}-2-MV_UDP.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 19 (Iperf to Monte Vista Reverse) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.26 -V -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-MV.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 20 (Iperf to Monte Vista UDP Reverse) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/iperf3 -c 10.96.254.26 -V -u -b 10M -Z -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}${PRETEST}${SITE_NAME}_reverse-2-MV_UDP.${NOW}.log
+	if [ $? -eq 0 ]
+	then
+		echo "Test completed as expected"
+		break
+	else
+		echo "Test did NOT complete as expected. Making $i more attempts"
+		sleep 4
+	fi
+done
+echo ""
+echo "Test 21 (NUTTCP to Monte Vista) in progress"
+for i in 5 4 3 2 1
+do
+/usr/bin/nuttcp -xt 10.96.254.26 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_nuttcp-2-MV.${NOW}.log
 	if [ $? -eq 0 ]
 	then
 		echo "Test completed as expected"
