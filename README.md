@@ -9,9 +9,11 @@ This script requires the following packages be installed manually, as of the cur
  - netcat < commented out for now since it requires root permissions
  - nmap
 
+Using Puppet to ensure these things are installed and that the current version of this script is pulled.
 ~~~
 Potential Improvements
 lots lol but some specifics:
 - Copy results to a web server or other remote, accessible storage location
 - List targets to iterate over
 - rewrite tests as functions that get called against the list of targets
+- Allow the user to pull the latest version of the script
