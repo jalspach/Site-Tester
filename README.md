@@ -17,3 +17,4 @@ lots lol but some specifics:
 - List targets to iterate over
 - rewrite tests as functions that get called against the list of targets
 - Allow the user to pull the latest version of the script
+- Output JSON or similar to make it easier to pull into other systems
