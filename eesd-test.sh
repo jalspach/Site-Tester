@@ -117,6 +117,22 @@ echo ""
 echo ""
 NOW=$(date +%F_%H-%M-%S)
 echo "Starting 21 tests at ...$(date)"
+# Test template to copy as needed
+# echo ""
+# copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
+# echo "Test 11 (NETCAT to system1) in progress"
+# for i in 5 4 3 2 1
+# do
+# /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
+# 	if [ $? -eq 0 ]
+# 	then
+# 		echo "Test completed as expected"
+# 		break
+# 	else
+# 		echo "Test did NOT complete as expected. Making $i more attempts"
+# 		sleep 4
+# 	fi
+# done
 echo ""
 echo "Test 1 (Iperf to SCOE) in progress"
 for i in 5 4 3 2 1
@@ -259,21 +275,7 @@ do
 		sleep 4
 	fi
 done
-# echo ""
-# copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
-# echo "Test 11 (NETCAT to system1) in progress"
-# for i in 5 4 3 2 1
-# do
-# /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
-# 	if [ $? -eq 0 ]
-# 	then
-# 		echo "Test completed as expected"
-# 		break
-# 	else
-# 		echo "Test did NOT complete as expected. Making $i more attempts"
-# 		sleep 4
-# 	fi
-# done
+
 echo ""
 copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
 echo "Test 11 (nmap to system1) in progress"
