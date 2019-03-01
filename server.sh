@@ -10,7 +10,7 @@ elif [ "$1" = "stop" ]; then
 else
    echo Starting servers...
    firewall-cmd --add-port 5000/tcp --add-port 5000/udp --add-port 5001/tcp --add-port 5001/udp --add-port 5201/tcp --add-port 5201/udp
-   /usr/bin/nuttcp -S &
+   /usr/bin/nuttcp -S --nofork &
    echo $! > $PID_DIR/nuttcp.pid
    /usr/bin/iperf3 -s -D -I $PID_DIR/iperf3.pid
 fi
