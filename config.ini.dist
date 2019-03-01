@@ -1,0 +1,11 @@
+[global]
+sites=fg:FG:FrenchGulch scoe:SCOE:SCOEHeadend 
+iperf=speedtest2.shastacoe.net iperf.shastacoe.net iperf.he.net
+speedtest=5411 19133
+nuttcp=speedtest2.shastacoe.net iperf.shastacoe.net
+logdir=$HOME/Site-Tester/Results/
+[client]
+site=FG
+retries=1
+[server]
+site=FG
