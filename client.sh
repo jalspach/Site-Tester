@@ -7,6 +7,7 @@ SITE=site
 #IPERF_OPTS="-Z"
 IPERF_OPTS="-f m -O 2 -t 20 -P 10"
 IPERF_TARGET="-b 10000M"
+#NUTTCP_OPTS="-xt"
 
 while getopts "bc:hr:l:s:" opt; do
   case ${opt} in
@@ -235,7 +236,7 @@ for (( i=0; i<$len; i++ )); do
    echo "Test $t (NUTTCP to $nuttcp_host) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/nuttcp -xt $nuttcp_host > ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$nuttcp_host.nuttcp.${NOW}.log
+   /usr/bin/nuttcp $NUTTCP_OPTS $nuttcp_host > ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$nuttcp_host.nuttcp.${NOW}.log
       if [ $? -eq 0 ]
       then
          echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
