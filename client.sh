@@ -6,7 +6,7 @@ RETRIES=5
 SITE=site
 #IPERF_OPTS="-Z"
 IPERF_OPTS="-f m -O 2 -t 20 -P 10"
-IPERF_TARGET="-b 10000M"
+IPERF_TARGET="-b 100M"
 #NUTTCP_OPTS="-xt"
 
 while getopts "bc:hr:l:s:" opt; do
