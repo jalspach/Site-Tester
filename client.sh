@@ -132,7 +132,7 @@ echo ""
 NOW=$(date +%F_%H-%M-%S)
 
 
-echo "Starting tests at ...$(date)" | tee $LOG_LOCATION/log-${NOW}.txt
+echo "Starting tests at ...$(date)" | tee -a $LOG_LOCATION/log-${NOW}.txt
 t=1
 # Test template to copy as needed
 # echo ""
@@ -157,58 +157,58 @@ len=${#iperf[@]}
 ## Loop through iperf servers
 for (( i=0; i<$len; i++ )); do 
    iperf_host=${iperf[$i]}
-   echo "Test $t (Iperf to $iperf_host) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (Iperf to $iperf_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
    	/usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf.${NOW}.log
    	if [ $? -eq 0 ]
    	then
-   		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		break
    	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		sleep 4
    	fi
    done
    echo ""
-   echo "Test $t (Iperf to $iperf_host Reverse) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (Iperf to $iperf_host Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
    /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-reverse.${NOW}.log
    	if [ $? -eq 0 ]
    	then
-   		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		break
    	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		sleep 4
    	fi
    done
    echo ""
-   echo "Test $t (Iperf to $iperf_host UDP) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (Iperf to $iperf_host UDP) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
    /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -u -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-udp.${NOW}.log
    	if [ $? -eq 0 ]
    	then
-   		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		break
    	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		sleep 4
    	fi
    done
    echo ""
-   echo "Test $t (Iperf to $iperf_host UDP Reverse) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (Iperf to $iperf_host UDP Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
    /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -u -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-udp-reverse.${NOW}.log
    	if [ $? -eq 0 ]
    	then
-   		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		break
    	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		sleep 4
    	fi
    done
@@ -220,17 +220,17 @@ len=${#speedtest[@]}
 for (( i=0; i<$len; i++ )); do 
    speedtest_host=${speedtest[$i]}
    echo ""
-   echo "Test $t (Speedtest to $speedtest_host) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (Speedtest to $speedtest_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/speedtest --server $speedtest_host | tee ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$speedtest_host.speedtest.${NOW}.log
+   /usr/bin/speedtest --server $speedtest_host | tee -a ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$speedtest_host.speedtest.${NOW}.log
    /usr/bin/speedtest --server $speedtest_host --csv >> ${LOG_LOCATION}/${PRETEST}speedtest.csv
    	if [ $? -eq 0 ]
    	then
-   		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		break
    	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
    		sleep 4
    	fi
    done
@@ -242,16 +242,16 @@ len=${#nuttcp[@]}
 for (( i=0; i<$len; i++ )); do 
    nuttcp_host=${nuttcp[$i]}
    echo ""
-   echo "Test $t (NUTTCP to $nuttcp_host) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+   echo "Test $t (NUTTCP to $nuttcp_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
    for (( r=0; r<$RETRIES; r++ )); do 
    /usr/bin/nuttcp $NUTTCP_OPTS $nuttcp_host > ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$nuttcp_host.nuttcp.${NOW}.log
       if [ $? -eq 0 ]
       then
-         echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+         echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
          break
       else
-         echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+         echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
          sleep 4
       fi
    done
@@ -259,21 +259,21 @@ done
 
 #echo ""
 #copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
-#echo "Test $t (nmap to system1) in progress" | tee $LOG_LOCATION/log-${NOW}.txt
+#echo "Test $t (nmap to system1) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
 #   ((t++))
 #   for (( r=0; r<$RETRIES; r++ )); do 
 #/usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}/${PRETEST}${SITE_NAME}_nmap-2-SCOE80.${NOW}.log
 #	if [ $? -eq 0 ]
 #	then
-#		echo "Test completed as expected" | tee $LOG_LOCATION/log-${NOW}.txt
+#		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
 #		break
 #	else
-#		echo "Test did NOT complete as expected. Making $r more attempts" | tee $LOG_LOCATION/log-${NOW}.txt
+#		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
 #		sleep 4
 #	fi
 #done
 #echo ""
-echo "Testing complete at ...$(date)" | tee $LOG_LOCATION/log-${NOW}.txt
+echo "Testing complete at ...$(date)" | tee -a $LOG_LOCATION/log-${NOW}.txt
 echo ""
 echo "Logs available here: $LOG_LOCATION"
 # echo "Copy files to accessable storage"
