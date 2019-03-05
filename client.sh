@@ -107,6 +107,14 @@ fi
 #			;;
 #	esac
 #done
+
+# flock to prevent multiple simultaneous runs
+exec 55<$0;
+if ! flock -n -x 55; then
+echo "An instance of this script is already running.";
+exit 1
+fi
+
 echo ""
 echo ""
 LOG_LOCATION=$LOG_DIR/$SITE/
@@ -122,6 +130,7 @@ echo "Test suite should take a min or so to complete"
 echo ""
 echo ""
 NOW=$(date +%F_%H-%M-%S)
+
 
 echo "Starting tests at ...$(date)" | tee $LOG_LOCATION/log-${NOW}.txt
 t=1
