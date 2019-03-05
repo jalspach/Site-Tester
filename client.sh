@@ -68,7 +68,7 @@ if [ -r $CFG_FILE ]; then
 fi
 
 declare -A SITE_ARRAY
-for my_site in ${sites[@]}; do 
+for my_site in ${sites[@]}; do
    IFS=: read -r my_key my_value <<< "$my_site"
    SITE_ARRAY[$my_key]="$my_value"
 done
@@ -161,7 +161,7 @@ t=1
 # copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
 # echo "Test $t (NETCAT to system1) in progress"
 #   ((t++))
-#   for (( r=0; r<$iperf_retries; r++ )); do 
+#   for (( r=0; r<$iperf_retries; r++ )); do
 # /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}/${log_prefix}${SITE_CODE}_netcat-2-SCOE80.${NOW}.log
 # 	if [ $? -eq 0 ]
 # 	then
@@ -177,74 +177,78 @@ echo ""
 len=${#iperf_hosts[@]}
  
 ## Loop through iperf servers
-for (( i=0; i<$len; i++ )); do 
+for (( i=0; i<$len; i++ )); do
    iperf_host=${iperf_hosts[$i]}
-   echo "Test $t (Iperf to $iperf_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   ((t++))
-   for (( r=$iperf_retries; r>0; r-- )); do 
-   	/usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf.${NOW}.log
-   	if [ $? -eq 0 ]
-   	then
-   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		break
-   	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		sleep 4
-   	fi
-   done
-   echo ""
-   echo "Test $t (Iperf to $iperf_host Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   ((t++))
-   for (( r=$iperf_retries; r>0; r-- )); do 
-   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-reverse.${NOW}.log
-   	if [ $? -eq 0 ]
-   	then
-   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		break
-   	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		sleep 4
-   	fi
-   done
-   echo ""
-   echo "Test $t (Iperf to $iperf_host UDP) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   ((t++))
-   for (( r=$iperf_retries; r>0; r-- )); do 
-   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp.${NOW}.log
-   	if [ $? -eq 0 ]
-   	then
-   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		break
-   	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		sleep 4
-   	fi
-   done
-   echo ""
-   echo "Test $t (Iperf to $iperf_host UDP Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   ((t++))
-   for (( r=$iperf_retries; r>0; r-- )); do 
-   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp-reverse.${NOW}.log
-   	if [ $? -eq 0 ]
-   	then
-   		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		break
-   	else
-   		echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
-   		sleep 4
-   	fi
-   done
+   if [ $iperf_tcp_forward -ne 0 ]; then
+      echo "Test $t (Iperf to $iperf_host TCP Forward) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
+      ((t++))
+      for (( r=$iperf_retries; r>0; r-- )); do
+         /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-tcp-forward.${NOW}.log
+         if [ $? -eq 0 ]
+         then
+            echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            break
+         else
+            echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            sleep 4
+         fi
+      done
+   fi
+   if [ $iperf_tcp_reverse -ne 0 ]; then
+      echo "Test $t (Iperf to $iperf_host TCP Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
+      ((t++))
+      for (( r=$iperf_retries; r>0; r-- )); do
+      /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-tcp-reverse.${NOW}.log
+         if [ $? -eq 0 ]
+         then
+            echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            break
+         else
+            echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            sleep 4
+         fi
+      done
+   fi
+   if [ $iperf_udp_forward -ne 0 ]; then
+      echo "Test $t (Iperf to $iperf_host UDP Forward) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
+      ((t++))
+      for (( r=$iperf_retries; r>0; r-- )); do
+      /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp-forward.${NOW}.log
+         if [ $? -eq 0 ]
+         then
+            echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            break
+         else
+            echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            sleep 4
+         fi
+      done
+   fi
+   if [ $iperf_udp_reverse -ne 0 ]; then
+      echo "Test $t (Iperf to $iperf_host UDP Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
+      ((t++))
+      for (( r=$iperf_retries; r>0; r-- )); do
+      /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp-reverse.${NOW}.log
+         if [ $? -eq 0 ]
+         then
+            echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            break
+         else
+            echo "Test did NOT complete as expected. Making $r more attempts" | tee -a $LOG_LOCATION/log-${NOW}.txt
+            sleep 4
+         fi
+      done
+   fi
 done
 ## get length of $speedtest_hosts array
 len=${#speedtest_hosts[@]}
  
 ## Loop through speedtest servers
-for (( i=0; i<$len; i++ )); do 
+for (( i=0; i<$len; i++ )); do
    speedtest_host=${speedtest_hosts[$i]}
-   echo ""
    echo "Test $t (Speedtest to $speedtest_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=$speedtest_retries; r>0; r-- )); do 
+   for (( r=$speedtest_retries; r>0; r-- )); do
    /usr/bin/speedtest $nuttcp_opts --server $speedtest_host | tee -a ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-speedtest_hostsspeedtest_host.speedtest.${NOW}.log
    /usr/bin/speedtest $nuttcp_opts --server $speedtest_host --csv >> ${LOG_LOCATION}/${log_prefix}speedtest.csv
    	if [ $? -eq 0 ]
@@ -261,12 +265,11 @@ done
 len=${#nuttcp_hosts[@]}
  
 ## Loop through nuttcp servers
-for (( i=0; i<$len; i++ )); do 
+for (( i=0; i<$len; i++ )); do
    nuttcp_host=${nuttcp_hosts[$i]}
-   echo ""
    echo "Test $t (NUTTCP to $nuttcp_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=$nuttcp_retries; r>0; r-- )); do 
+   for (( r=$nuttcp_retries; r>0; r-- )); do
    /usr/bin/nuttcp $nuttcp_opts $nuttcp_host > ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$nuttcp_host.nuttcp.${NOW}.log
       if [ $? -eq 0 ]
       then
@@ -279,11 +282,10 @@ for (( i=0; i<$len; i++ )); do
    done
 done
 
-#echo ""
 #copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
 #echo "Test $t (nmap to system1) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
 #   ((t++))
-#   for (( r=0; r<$RETRIES; r++ )); do 
+#   for (( r=0; r<$RETRIES; r++ )); do
 #/usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}/${log_prefix}${SITE_CODE}_nmap-2-SCOE80.${NOW}.log
 #	if [ $? -eq 0 ]
 #	then
@@ -294,7 +296,6 @@ done
 #		sleep 4
 #	fi
 #done
-#echo ""
 log $LOG_LOCATION/log-${NOW}.txt "Testing complete at ...$(date)"
 verbose "Testing complete at ...$(date)"
 verbose "Logs available here: $LOG_LOCATION"
