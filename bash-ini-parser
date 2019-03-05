@@ -204,8 +204,8 @@ function cfg_update {
 }
 
 #Test harness
-if [ $# != 0 ]
-then
-   $@
-fi
+#if [ $# != 0 ]
+#then
+#   $@
+#fi
 # vim: filetype=sh
