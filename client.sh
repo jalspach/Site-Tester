@@ -16,6 +16,7 @@ iperf_udp_reverse=1
 nuttcp_retries=3
 #nuttcp_opts="-xt"
 nuttcp_opts=
+speedtest_retries=3
 speedtest_opts=
 
 # Defaults, override with command line options
