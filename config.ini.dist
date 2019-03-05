@@ -1,11 +1,22 @@
 [global]
-sites=fg:FG:FrenchGulch scoe:SCOE:SCOEHeadend 
-iperf=speedtest2.shastacoe.net iperf.shastacoe.net iperf.he.net
-speedtest=5411 19133
-nuttcp=speedtest2.shastacoe.net iperf.shastacoe.net
-logdir=$HOME/Site-Tester/Results/
+sites=FG:FrenchGulch SCOE:SCOE_Head_End 
+#log_dir=$HOME/Site-Tester/Results
+#log_prefix=""
 [client]
 site=FG
-retries=1
+#iperf_hosts=iperf.shastacoe.net iperf.he.net
+#iperf_opts="-f m -O 2 -t 20 -P 10"
+#iperf_target="-b 100M"
+#iperf_tcp_forward=1
+#iperf_tcp_reverse=1
+#iperf_udp_forward=1
+#iperf_udp_reverse=1
+#iperf_retries=3
+#speedtest_hosts=5411 19133
+#speedtest_opts=""
+#speedtest_retries=3
+#nuttcp_hosts=iperf.shastacoe.net
+#nuttcp_opts=""
+#nuttcp_retries=3
 [server]
 site=FG

@@ -1,15 +1,35 @@
 #!/bin/bash
 
-LOG_DIR=$HOME/Site-Tester/Results/
-CFG_FILE=`dirname $0`/config.ini
-RETRIES=5
-SITE=site
-#IPERF_OPTS="-Z"
-IPERF_OPTS="-f m -O 2 -t 20 -P 10"
-IPERF_TARGET="-b 100M"
-#NUTTCP_OPTS="-xt"
+# Defaults, override in config.ini
+log_dir=$HOME/Site-Tester/Results
+log_prefix=""
+site=site
+sites=site:Default_Site
+iperf_retries=3
+#iperf_opts="-Z"
+iperf_opts="-f m -O 2 -t 20 -P 10"
+iperf_target="-b 100M"
+iperf_tcp_forward=1
+iperf_tcp_reverse=1
+iperf_udp_forward=1
+iperf_udp_reverse=1
+nuttcp_retries=3
+#nuttcp_opts="-xt"
+nuttcp_opts=
+speedtest_opts=
 
-while getopts "bc:hr:l:s:" opt; do
+# Defaults, override with command line options
+CFG_FILE=`dirname $0`/config.ini
+BATCH=1
+VERBOSE=0
+
+#BASH_INI_PARSER_DEBUG=1 
+
+function die() { echo "$*" 1>&2 ; exit 1; }
+function verbose() { [[ $VERBOSE = 0 ]] || echo "$*" 1>&2 ; }
+function log() { LOG_FILE=$1; shift; echo "$*" >> $LOG_FILE ; }
+
+while getopts "bc:hr:l:s:v" opt; do
   case ${opt} in
     b ) # batch mode
       BATCH=1
@@ -25,6 +45,9 @@ while getopts "bc:hr:l:s:" opt; do
       ;;
     s ) # site
       OPT_SITE=$OPTARG
+      ;;
+    v ) # site
+      VERBOSE=1
       ;;
     h|\? )
       echo "Usage: $0 [-h] [-b]"
@@ -44,25 +67,25 @@ if [ -r $CFG_FILE ]; then
    cfg_section_client
 fi
 
+declare -A SITE_ARRAY
+for my_site in ${sites[@]}; do 
+   IFS=: read -r my_key my_value <<< "$my_site"
+   SITE_ARRAY[$my_key]="$my_value"
+done
+
 if [ ! -z "$OPT_LOG_DIR" ]; then
-   LOG_DIR=$OPT_LOG_DIR
-elif [ ! -z "$retries" ]; then
-   LOG_DIR=$logdir
+   log_dir=$OPT_LOG_DIR
 fi
 
 if [ ! -z "$OPT_RETRIES" ]; then
-   RETRIES=$OPT_RETRIES
-elif [ ! -z "$retries" ]; then
-   RETRIES=$retries
+   iperf_retries=$OPT_RETRIES
+   speedtest_retries=$OPT_RETRIES
+   nuttcp_retries=$OPT_RETRIES
 fi
 
 if [ ! -z "$OPT_SITE" ]; then
-   SITE=$OPT_SITE
-elif [ ! -z "$site" ]; then
-   SITE=$site
+   site=$OPT_SITE
 fi
-#exit
-#clear
 
 #echo "This test script will run prescribed tests from this box to various places on the network. It will capture the log files for later use."
 #
@@ -74,12 +97,12 @@ fi
 #	case $USER_PRETEST in
 #		y|Y)
 #			echo "We will flag these as pre installation test results"
-#			PRETEST="PreInstall-"
+#			log_prefix="PreInstall-"
 #			break
 #			;;
 #		n|N)
 #			echo "We will NOT these tests as pre installation test results"
-#			PRETEST=""
+#			log_prefix=""
 #			break
 #			;;
 #		*)
@@ -115,32 +138,31 @@ echo "An instance of this script is already running.";
 exit 1
 fi
 
-echo ""
-echo ""
-LOG_LOCATION=$LOG_DIR/$SITE/
-PRETEST=""
-SITE_CODE=$SITE
-SITE_NAME=$SITE
-echo "Creating folder to store results"
-echo $LOG_LOCATION
-mkdir -p ${LOG_LOCATION}
-echo ""
-echo ""
-echo "Test suite should take a min or so to complete"
-echo ""
-echo ""
+if [ ! -z "$site" ]; then
+   SITE_CODE=$site
+   SITE_NAME=${SITE_ARRAY[$site]}
+else
+   SITE_CODE="site"
+   SITE_NAME="Default_Site"
+fi
+LOG_LOCATION=$log_dir/$SITE_CODE
+verbose "Creating folder to store results: $LOG_LOCATION"
+mkdir -p ${LOG_LOCATION} || die "Can't create log directory: $LOG_LOCATION"
+verbose "Each test should take less than a min to complete."
 NOW=$(date +%F_%H-%M-%S)
 
 
-echo "Starting tests at ...$(date)" | tee -a $LOG_LOCATION/log-${NOW}.txt
+log $LOG_LOCATION/log-${NOW}.txt "Starting tests at ...$(date)"
+verbose "Starting tests at ...$(date)"
+
 t=1
 # Test template to copy as needed
 # echo ""
 # copy this test as needed for various services and locations or, better yet, run all netcat tests to a single log file.
 # echo "Test $t (NETCAT to system1) in progress"
 #   ((t++))
-#   for (( r=0; r<$RETRIES; r++ )); do 
-# /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}/${PRETEST}${SITE_NAME}_netcat-2-SCOE80.${NOW}.log
+#   for (( r=0; r<$iperf_retries; r++ )); do 
+# /bin/netcat -xv iperf.shastacoe.net 80 > ${LOG_LOCATION}/${log_prefix}${SITE_CODE}_netcat-2-SCOE80.${NOW}.log
 # 	if [ $? -eq 0 ]
 # 	then
 # 		echo "Test completed as expected"
@@ -151,16 +173,16 @@ t=1
 # 	fi
 # done
 echo ""
-## get length of $iperf array
-len=${#iperf[@]}
+## get length of $iperf_hosts array
+len=${#iperf_hosts[@]}
  
 ## Loop through iperf servers
 for (( i=0; i<$len; i++ )); do 
-   iperf_host=${iperf[$i]}
+   iperf_host=${iperf_hosts[$i]}
    echo "Test $t (Iperf to $iperf_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   	/usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf.${NOW}.log
+   for (( r=$iperf_retries; r>0; r-- )); do 
+   	/usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf.${NOW}.log
    	if [ $? -eq 0 ]
    	then
    		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -173,8 +195,8 @@ for (( i=0; i<$len; i++ )); do
    echo ""
    echo "Test $t (Iperf to $iperf_host Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-reverse.${NOW}.log
+   for (( r=$iperf_retries; r>0; r-- )); do 
+   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-reverse.${NOW}.log
    	if [ $? -eq 0 ]
    	then
    		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -187,8 +209,8 @@ for (( i=0; i<$len; i++ )); do
    echo ""
    echo "Test $t (Iperf to $iperf_host UDP) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -u -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-udp.${NOW}.log
+   for (( r=$iperf_retries; r>0; r-- )); do 
+   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp.${NOW}.log
    	if [ $? -eq 0 ]
    	then
    		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -201,8 +223,8 @@ for (( i=0; i<$len; i++ )); do
    echo ""
    echo "Test $t (Iperf to $iperf_host UDP Reverse) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/iperf3 -c $iperf_host $IPERF_OPTS $IPERF_TARGET -u -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$iperf_host.iperf-udp-reverse.${NOW}.log
+   for (( r=$iperf_retries; r>0; r-- )); do 
+   /usr/bin/iperf3 -c $iperf_host $iperf_opts $iperf_target -u -R -T ${SITE_CODE} --logfile ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$iperf_host.iperf-udp-reverse.${NOW}.log
    	if [ $? -eq 0 ]
    	then
    		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -213,18 +235,18 @@ for (( i=0; i<$len; i++ )); do
    	fi
    done
 done
-## get length of $speedtest array
-len=${#speedtest[@]}
+## get length of $speedtest_hosts array
+len=${#speedtest_hosts[@]}
  
 ## Loop through speedtest servers
 for (( i=0; i<$len; i++ )); do 
-   speedtest_host=${speedtest[$i]}
+   speedtest_host=${speedtest_hosts[$i]}
    echo ""
    echo "Test $t (Speedtest to $speedtest_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/speedtest --server $speedtest_host | tee -a ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$speedtest_host.speedtest.${NOW}.log
-   /usr/bin/speedtest --server $speedtest_host --csv >> ${LOG_LOCATION}/${PRETEST}speedtest.csv
+   for (( r=$speedtest_retries; r>0; r-- )); do 
+   /usr/bin/speedtest $nuttcp_opts --server $speedtest_host | tee -a ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-speedtest_hostsspeedtest_host.speedtest.${NOW}.log
+   /usr/bin/speedtest $nuttcp_opts --server $speedtest_host --csv >> ${LOG_LOCATION}/${log_prefix}speedtest.csv
    	if [ $? -eq 0 ]
    	then
    		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -235,17 +257,17 @@ for (( i=0; i<$len; i++ )); do
    	fi
    done
 done
-## get length of $nuttcp array
-len=${#nuttcp[@]}
+## get length of $nuttcp_hosts array
+len=${#nuttcp_hosts[@]}
  
 ## Loop through nuttcp servers
 for (( i=0; i<$len; i++ )); do 
-   nuttcp_host=${nuttcp[$i]}
+   nuttcp_host=${nuttcp_hosts[$i]}
    echo ""
    echo "Test $t (NUTTCP to $nuttcp_host) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
    ((t++))
-   for (( r=0; r<$RETRIES; r++ )); do 
-   /usr/bin/nuttcp $NUTTCP_OPTS $nuttcp_host > ${LOG_LOCATION}/${PRETEST}${SITE_NAME}-2-$nuttcp_host.nuttcp.${NOW}.log
+   for (( r=$nuttcp_retries; r>0; r-- )); do 
+   /usr/bin/nuttcp $nuttcp_opts $nuttcp_host > ${LOG_LOCATION}/${log_prefix}${SITE_CODE}-2-$nuttcp_host.nuttcp.${NOW}.log
       if [ $? -eq 0 ]
       then
          echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -262,7 +284,7 @@ done
 #echo "Test $t (nmap to system1) in progress" | tee -a $LOG_LOCATION/log-${NOW}.txt
 #   ((t++))
 #   for (( r=0; r<$RETRIES; r++ )); do 
-#/usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}/${PRETEST}${SITE_NAME}_nmap-2-SCOE80.${NOW}.log
+#/usr/bin/nmap -sT -v -p 80 iperf.shastacoe.net -oG ${LOG_LOCATION}/${log_prefix}${SITE_CODE}_nmap-2-SCOE80.${NOW}.log
 #	if [ $? -eq 0 ]
 #	then
 #		echo "Test completed as expected" | tee -a $LOG_LOCATION/log-${NOW}.txt
@@ -273,10 +295,10 @@ done
 #	fi
 #done
 #echo ""
-echo "Testing complete at ...$(date)" | tee -a $LOG_LOCATION/log-${NOW}.txt
-echo ""
-echo "Logs available here: $LOG_LOCATION"
+log $LOG_LOCATION/log-${NOW}.txt "Testing complete at ...$(date)"
+verbose "Testing complete at ...$(date)"
+verbose "Logs available here: $LOG_LOCATION"
 # echo "Copy files to accessable storage"
-# svn ${LOG_LOCATION}/* ${REMOTE_LOCATION}/${SITE_NAME}/
+# svn ${LOG_LOCATION}/* ${REMOTE_LOCATION}/${SITE_CODE}/
 # echo "finished copying files to remote accessable storage"
 exit 0
